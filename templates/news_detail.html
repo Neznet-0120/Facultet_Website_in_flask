@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }} - Finance & Economy{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="mb-4 animate-fade-in-up">
+            <a href="{{ url_for('index') }}" class="btn btn-custom-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Назад к новостям
+            </a>
+        </div>
+
+        <div class="card-custom animate-fade-in-up" style="animation-delay: 0.1s;">
+            {% if news.photo %}
+            <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
+                <img src="{{ url_for('static', filename='uploads/' + news.photo) }}" 
+                     alt="{{ news.title }}" 
+                     style="width: 100%; height: 400px; object-fit: cover;">
+            </div>
+            {% endif %}
+
+            <div class="p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="badge badge-custom role-{{ news.author.role }}">
+                            <i class="fas fa-user me-1"></i>{{ news.author.username }}
+                        </span>
+                        <span style="color: var(--text-muted);">
+                            <i class="far fa-clock me-1"></i>{{ news.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </span>
+                    </div>
+
+ 
+                    {% if session.user_id == news.author_id or session.role == 'admin' %}
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('edit_news', id=news.id) }}" class="btn btn-sm" 
+                           style="background: rgba(244, 162, 97, 0.2); color: var(--accent-gold); border: none;">
+                            <i class="fas fa-edit me-1"></i>Редактировать
+                        </a>
+                        <a href="{{ url_for('delete_news', id=news.id) }}" 
+                           onclick="return confirm('Вы уверены, что хотите удалить эту новость?');"
+                           class="btn btn-sm" 
+                           style="background: rgba(231, 111, 81, 0.2); color: var(--accent-orange); border: none;">
+                            <i class="fas fa-trash me-1"></i>Удалить
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <h1 class="display-5 fw-bold mb-4" style="color: var(--text-light);">
+                    {{ news.title }}
+                </h1>
+
+                <div class="mb-4" style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
+                    {{ news.content }}
+                </div>
+
+ 
+                <div class="d-flex gap-4 mb-4 pb-4" style="border-bottom: 1px solid var(--border-color);">
+                    <a href="{{ url_for('like_news', id=news.id) }}" class="like-btn {% if session.user_id in liked_user_ids %}liked{% endif %}" style="text-decoration: none;">
+                        <i class="fas fa-heart me-2"></i>{{ news.likes|length }} 
+                        {% if news.likes|length == 1 %}лайк{% elif news.likes|length < 5 %}лайка{% else %}лайков{% endif %}
+                    </a>
+                    
+                    <span style="color: var(--text-muted); font-size: 1.1rem;">
+                        <i class="fas fa-comment me-2"></i>{{ comments|length }} 
+                        {% if comments|length == 1 %}комментарий{% elif comments|length < 5 %}комментария{% else %}комментариев{% endif %}
+                    </span>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="mb-4" style="color: var(--accent-gold);">
+                        <i class="fas fa-comments me-2"></i>Комментарии
+                    </h4>
+
+
+                    <div class="mb-4">
+                        <form method="POST" action="{{ url_for('comment_news', id=news.id) }}">
+                            <div class="mb-3">
+                                <textarea class="form-control form-control-custom" 
+                                          name="content" 
+                                          rows="3" 
+                                          placeholder="Напишите комментарий..." 
+                                          required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-custom-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Отправить комментарий
+                            </button>
+                        </form>
+                    </div>
+
+                    {% if comments %}
+                    <div class="mt-4">
+                        {% for comment in comments %}
+                        <div class="comment-item mb-3 p-3" style="background: rgba(26, 31, 58, 0.4); border-radius: 8px;">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <strong style="color: var(--text-light);">{{ comment.author.username }}</strong>
+                                    <span class="badge badge-custom role-{{ comment.author.role }} ms-2">
+                                        {{ comment.author.role }}
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <small style="color: var(--text-muted);">
+                                        {{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                    </small>
+                                    {% if session.user_id == comment.author_id or session.user_id == news.author_id or session.role == 'admin' %}
+                                    <a href="{{ url_for('delete_comment', id=comment.id) }}" 
+                                       onclick="return confirm('Удалить комментарий?');"
+                                       class="btn btn-sm" 
+                                       style="background: rgba(231, 111, 81, 0.2); color: var(--accent-orange); border: none; padding: 2px 8px;">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p class="mb-0" style="color: var(--text-muted);">
+                                {{ comment.content }}
+                            </p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center p-4" style="background: rgba(26, 31, 58, 0.4); border-radius: 8px;">
+                        <i class="fas fa-comments fa-3x mb-3" style="color: var(--text-muted);"></i>
+                        <p style="color: var(--text-muted);">Пока нет комментариев. Будьте первым!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

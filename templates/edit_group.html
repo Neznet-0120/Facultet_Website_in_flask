@@ -1,0 +1,51 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Редактировать группу - Админ панель{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card-custom p-5 animate-fade-in-up">
+            <h2 class="mb-4">
+                <i class="fas fa-edit me-3" style="color: var(--accent-gold);"></i>
+                Редактировать группу
+            </h2>
+
+            {# Fixed URL parameter from group_id to id #}
+            <form method="POST" action="{{ url_for('edit_group', id=group.id) }}">
+                <div class="mb-4">
+                    <label for="name" class="form-label-custom">
+                        <i class="fas fa-users-cog me-2"></i>Название группы
+                    </label>
+                    <input type="text" class="form-control form-control-custom" id="name" 
+                           name="name" required value="{{ group.name }}">
+                </div>
+
+                {# Added course field #}
+                <div class="mb-4">
+                    <label for="course" class="form-label-custom">
+                        <i class="fas fa-graduation-cap me-2"></i>Курс
+                    </label>
+                    <select class="form-control form-control-custom" id="course" name="course" required>
+                        <option value="">Выберите курс</option>
+                        <option value="1" {% if group.course == 1 %}selected{% endif %}>1 курс</option>
+                        <option value="2" {% if group.course == 2 %}selected{% endif %}>2 курс</option>
+                        <option value="3" {% if group.course == 3 %}selected{% endif %}>3 курс</option>
+                        <option value="4" {% if group.course == 4 %}selected{% endif %}>4 курс</option>
+                        <option value="5" {% if group.course == 5 %}selected{% endif %}>5 курс</option>
+                    </select>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-custom-primary">
+                        <i class="fas fa-save me-2"></i>Сохранить изменения
+                    </button>
+                    <a href="{{ url_for('admin_groups') }}" class="btn btn-custom-secondary">
+                        <i class="fas fa-times me-2"></i>Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

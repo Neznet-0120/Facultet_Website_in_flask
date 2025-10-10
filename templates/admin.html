@@ -1,0 +1,158 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Управление пользователями - Админ панель{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in-up">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-user-clock me-3" style="color: var(--accent-gold);"></i>
+                Запросы на регистрацию
+            </h1>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4 animate-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="card-custom p-4 text-center">
+            <i class="fas fa-clock fa-3x mb-3" style="color: #ffc107;"></i>
+            <h3 class="mb-0">{{ pending_users|length }}</h3>
+            <p class="mb-0" style="color: var(--text-muted);">Ожидают одобрения</p>
+        </div>
+    </div>
+    <div class="col-md-4 animate-fade-in-up" style="animation-delay: 0.2s;">
+        <div class="card-custom p-4 text-center">
+            <i class="fas fa-users fa-3x mb-3" style="color: var(--accent-gold);"></i>
+            <h3 class="mb-0">{{ users_count }}</h3>
+            <p class="mb-0" style="color: var(--text-muted);">Всего пользователей</p>
+        </div>
+    </div>
+    <div class="col-md-4 animate-fade-in-up" style="animation-delay: 0.3s;">
+        <div class="card-custom p-4 text-center">
+            <i class="fas fa-newspaper fa-3x mb-3" style="color: var(--accent-orange);"></i>
+            <h3 class="mb-0">{{ news_count }}</h3>
+            <p class="mb-0" style="color: var(--text-muted);">Всего новостей</p>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Users Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card-custom p-4 animate-fade-in-up">
+            {% if pending_users %}
+            <div class="table-responsive">
+                <table class="table table-custom">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя пользователя</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Группа</th>
+                            <th>Курс</th>
+                            <th>Дата регистрации</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in pending_users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <span class="badge badge-custom role-{{ user.role }}">
+                                    {% if user.role == 'admin' %}Администратор
+                                    {% elif user.role == 'teacher' %}Преподаватель
+                                    {% else %}Студент{% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                {% if user.group %}
+                                    {{ user.group.name }}
+                                {% else %}
+                                    <span style="color: var(--text-muted);">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.course %}
+                                    {{ user.course }} курс
+                                {% else %}
+                                    <span style="color: var(--text-muted);">—</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <!-- Fixed form action to use correct route admin_update_status -->
+                                    <form method="POST" action="{{ url_for('admin_update_status') }}" class="d-inline">
+                                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                                        <input type="hidden" name="action" value="approve">
+                                        <button type="submit" class="btn btn-sm" 
+                                                style="background: var(--success); color: white; border: none;"
+                                                title="Одобрить">
+                                            <i class="fas fa-check"></i> Одобрить
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('admin_update_status') }}" class="d-inline">
+                                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" class="btn btn-sm" 
+                                                style="background: var(--danger); color: white; border: none;"
+                                                title="Отклонить">
+                                            <i class="fas fa-times"></i> Отклонить
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-check-circle fa-4x mb-3" style="color: var(--success); opacity: 0.5;"></i>
+                <h4 style="color: var(--text-muted);">Нет ожидающих запросов</h4>
+                <p style="color: var(--text-muted);">Все запросы на регистрацию обработаны</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Latest News Section -->
+{% if latest_news %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card-custom p-4 animate-fade-in-up">
+            <h4 class="mb-4">
+                <i class="fas fa-newspaper me-2" style="color: var(--accent-orange);"></i>
+                Последние новости
+            </h4>
+            <div class="list-group">
+                {% for news in latest_news %}
+                <a href="{{ url_for('news_detail', id=news.id) }}" 
+                   class="list-group-item list-group-item-action"
+                   style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 10px; border-radius: 8px;">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ news.title }}</h6>
+                        <small style="color: var(--text-muted);">{{ news.created_at.strftime('%d.%m.%Y') }}</small>
+                    </div>
+                    <p class="mb-1" style="color: var(--text-muted);">{{ news.content[:100] }}...</p>
+                    <small style="color: var(--accent-gold);">
+                        <i class="fas fa-user me-1"></i>{{ news.author.username }}
+                        <i class="fas fa-heart ms-3 me-1"></i>{{ news.likes|length }}
+                    </small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,486 @@
+/* Finance & Economy University - Modern Dark Theme */
+
+:root {
+  --primary-dark: #0a0e27;
+  --secondary-dark: #1a1f3a;
+  --accent-gold: #f4a261;
+  --accent-orange: #e76f51;
+  --text-light: #e8e9ed;
+  --text-muted: #a8aab7;
+  --success: #2a9d8f;
+  --danger: #e63946;
+  --border-color: #2d3250;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+  color: var(--text-light);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+/* Custom Buttons */
+.btn-custom-primary {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-custom-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(244, 162, 97, 0.3);
+  color: white;
+}
+
+.btn-custom-primary:active {
+  transform: translateY(0);
+}
+
+.btn-custom-secondary {
+  background: transparent;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-custom-secondary:hover {
+  background: var(--accent-gold);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(244, 162, 97, 0.2);
+}
+
+/* Cards */
+.card-custom {
+  background: rgba(26, 31, 58, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-gold);
+}
+
+/* Navigation */
+.navbar-custom {
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-custom.scrolled {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-link {
+  color: var(--text-light) !important;
+  font-weight: 500;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent-gold);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover:after {
+  width: 80%;
+}
+
+.nav-link:hover {
+  color: var(--accent-gold) !important;
+}
+
+/* Forms */
+.form-control-custom {
+  background: rgba(26, 31, 58, 0.6);
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.form-control-custom:focus {
+  background: rgba(26, 31, 58, 0.8);
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 0.2rem rgba(244, 162, 97, 0.25);
+  color: var(--text-light);
+}
+
+.form-control-custom::placeholder {
+  color: var(--text-muted);
+}
+
+.form-label-custom {
+  color: var(--text-light);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+/* Hero Section */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(244, 162, 97, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(231, 111, 81, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* News Cards */
+.news-card {
+  background: rgba(26, 31, 58, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.news-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-gold);
+}
+
+.news-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.news-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Profile Avatar */
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid var(--accent-gold);
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(244, 162, 97, 0.3);
+}
+
+/* Table Custom */
+.table-custom {
+  background: rgba(26, 31, 58, 0.6);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-custom thead {
+  background: rgba(244, 162, 97, 0.1);
+}
+
+.table-custom th {
+  color: var(--accent-gold);
+  font-weight: 600;
+  border-color: var(--border-color);
+  padding: 15px;
+}
+
+.table-custom td {
+  color: var(--text-light);
+  border-color: var(--border-color);
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.table-custom tbody tr {
+  transition: all 0.3s ease;
+}
+
+.table-custom tbody tr:hover {
+  background: rgba(244, 162, 97, 0.05);
+}
+
+/* Adding stronger specificity for table styling to override Bootstrap defaults */
+.table.table-custom {
+  color: var(--text-light);
+  background-color: transparent;
+  border-color: var(--border-color);
+}
+
+.table.table-custom thead th {
+  background-color: rgba(244, 162, 97, 0.15);
+  color: var(--accent-gold);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.table.table-custom tbody td {
+  background-color: rgba(26, 31, 58, 0.4);
+  color: var(--text-light);
+}
+
+.table.table-custom tbody tr:hover td {
+  background-color: rgba(244, 162, 97, 0.1);
+}
+
+/* Badges */
+.badge-custom {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Alert Custom */
+.alert-custom {
+  border-radius: 8px;
+  border: none;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Comments Section */
+.comment-item {
+  background: rgba(26, 31, 58, 0.4);
+  border-left: 3px solid var(--accent-gold);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  background: rgba(26, 31, 58, 0.6);
+  transform: translateX(5px);
+}
+
+/* Like Button */
+.like-btn {
+  background: transparent;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 8px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.like-btn:hover {
+  background: var(--accent-gold);
+  color: white;
+  transform: scale(1.05);
+}
+
+.like-btn.liked {
+  background: var(--accent-gold);
+  color: white;
+}
+
+/* Loading Spinner */
+.spinner-custom {
+  border: 3px solid rgba(244, 162, 97, 0.3);
+  border-top: 3px solid var(--accent-gold);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 80vh;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .btn-custom-primary,
+  .btn-custom-secondary {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Scroll to top button */
+.scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--accent-gold);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.scroll-top.visible {
+  opacity: 1;
+}
+
+.scroll-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(244, 162, 97, 0.4);
+}
+
+/* Status badges */
+.status-pending {
+  background: #ffc107;
+  color: #000;
+}
+
+.status-approved {
+  background: var(--success);
+  color: white;
+}
+
+.status-rejected {
+  background: var(--danger);
+  color: white;
+}
+
+/* Role badges */
+.role-admin {
+  background: var(--accent-orange);
+  color: white;
+}
+
+.role-teacher {
+  background: #6c63ff;
+  color: white;
+}
+
+.role-student {
+  background: var(--success);
+  color: white;
+}

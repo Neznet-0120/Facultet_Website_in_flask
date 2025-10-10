@@ -1,0 +1,139 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Управление предметами - Админ панель{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in-up">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-book me-3" style="color: var(--accent-gold);"></i>
+                Управление предметами
+            </h1>
+            <button class="btn btn-custom-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                <i class="fas fa-plus-circle me-2"></i>Добавить предмет
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Subjects Grid -->
+{% if subjects %}
+<div class="row g-4">
+    {% for subject in subjects %}
+    <div class="col-md-6 col-lg-4 animate-fade-in-up" style="animation-delay: {{ loop.index * 0.05 }}s;">
+        <div class="card-custom p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="mb-0">{{ subject.name }}</h5>
+                <span class="badge badge-custom" style="background: var(--accent-gold); color: white;">
+                    ID: {{ subject.id }}
+                </span>
+            </div>
+            
+            <!-- Added teachers list display -->
+            {% if subject.teachers %}
+            <div class="mb-3">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>Преподаватели:
+                </p>
+                <div class="d-flex flex-wrap gap-1">
+                    {% for teacher in subject.teachers %}
+                    <span class="badge" style="background: rgba(244, 162, 97, 0.2); color: var(--accent-gold); font-size: 0.8rem;">
+                        {{ teacher.username }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                <i class="fas fa-exclamation-circle me-2"></i>Нет назначенных преподавателей
+            </p>
+            {% endif %}
+
+            <!-- Fixed URL parameters: subject_id -> id, delete_subject -> subject_delete -->
+            <div class="d-flex gap-2 mt-3">
+                <a href="{{ url_for('edit_subjects', id=subject.id) }}" class="btn btn-sm btn-custom-primary flex-grow-1">
+                    <i class="fas fa-edit me-1"></i>Редактировать
+                </a>
+                <form method="POST" action="{{ url_for('subject_delete', id=subject.id) }}" 
+                      onsubmit="return confirm('Вы уверены, что хотите удалить этот предмет?');" class="d-inline">
+                    <button type="submit" class="btn btn-sm" 
+                            style="background: rgba(231, 111, 81, 0.2); color: var(--accent-orange); border: none;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card-custom p-5 text-center animate-fade-in-up">
+            <i class="fas fa-book fa-4x mb-4" style="color: var(--text-muted);"></i>
+            <h3 class="mb-3">Пока нет предметов</h3>
+            <p style="color: var(--text-muted);">Создайте первый предмет, чтобы начать управление учебным процессом</p>
+            <button class="btn btn-custom-primary mt-3" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                <i class="fas fa-plus-circle me-2"></i>Создать предмет
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add Subject Modal -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: var(--secondary-dark); border: 1px solid var(--border-color);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2" style="color: var(--accent-gold);"></i>
+                    Добавить предмет
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1);"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_subjects') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label-custom">
+                            <i class="fas fa-book me-2"></i>Название предмета
+                        </label>
+                        <input type="text" class="form-control form-control-custom" id="name" 
+                               name="name" required placeholder="Например: Микроэкономика">
+                    </div>
+
+                    <!-- Added teachers selection field -->
+                    <div class="mb-3">
+                        <label class="form-label-custom">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Преподаватели
+                        </label>
+                        <div style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: rgba(26, 31, 58, 0.4);">
+                            {% if teachers %}
+                                {% for teacher in teachers %}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="teachers" 
+                                           value="{{ teacher.id }}" id="teacher{{ teacher.id }}">
+                                    <label class="form-check-label" for="teacher{{ teacher.id }}" style="color: var(--text-light);">
+                                        {{ teacher.username }} ({{ teacher.email }})
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p style="color: var(--text-muted); margin: 0;">Нет доступных преподавателей</p>
+                            {% endif %}
+                        </div>
+                        <small style="color: var(--text-muted);">Выберите одного или нескольких преподавателей</small>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border-color);">
+                    <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-custom-primary">
+                        <i class="fas fa-save me-2"></i>Создать
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

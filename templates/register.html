@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Finance & Economy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-md-6 col-lg-5">
+                <div class="card-custom p-5 animate-fade-in-up">
+                    <div class="text-center mb-4">
+                        <a href="/" class="text-decoration-none">
+                            <h2 class="navbar-brand mb-0">
+                                <i class="fas fa-graduation-cap me-2"></i>Finance & Economy
+                            </h2>
+                        </a>
+                        <p class="mt-2" style="color: var(--text-muted);">Создайте свой аккаунт</p>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-custom" role="alert">
+                                <i class="fas fa-{{ 'exclamation-circle' if category == 'error' else 'check-circle' }} me-2"></i>
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label-custom">
+                                <i class="fas fa-user me-2"></i>Имя пользователя
+                            </label>
+                            <input type="text" class="form-control form-control-custom" id="username" 
+                                   name="username" required placeholder="Введите имя пользователя"
+                                   value="{{ username if username else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label-custom">
+                                <i class="fas fa-envelope me-2"></i>Email
+                            </label>
+                            <input type="email" class="form-control form-control-custom" id="email" 
+                                   name="email" required placeholder="example@university.com"
+                                   value="{{ email if email else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label-custom">
+                                <i class="fas fa-lock me-2"></i>Пароль
+                            </label>
+                            <input type="password" class="form-control form-control-custom" id="password" 
+                                   name="password" required placeholder="Минимум 8 символов">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="role" class="form-label-custom">
+                                <i class="fas fa-user-tag me-2"></i>Роль
+                            </label>
+                            <select class="form-control form-control-custom" id="role" name="role" required>
+                                <option value="">Выберите роль</option>
+                                <option value="student" {{ 'selected' if role == 'student' else '' }}>Студент</option>
+                                <option value="teacher" {{ 'selected' if role == 'teacher' else '' }}>Преподаватель</option>
+                            </select>
+                        </div>
+
+                        <div id="studentFields" style="display: none;">
+                            <div class="mb-3">
+                                <label for="group_id" class="form-label-custom">
+                                    <i class="fas fa-users me-2"></i>Группа
+                                </label>
+                                <select class="form-control form-control-custom" id="group_id" name="group_id">
+                                    <option value="">Выберите группу</option>
+                                    {% for group in groups %}
+                                    <option value="{{ group.id }}">{{ group.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="course" class="form-label-custom">
+                                    <i class="fas fa-book me-2"></i>Курс
+                                </label>
+                                <select class="form-control form-control-custom" id="course" name="course">
+                                    <option value="">Выберите курс</option>
+                                    <option value="1">1 курс</option>
+                                    <option value="2">2 курс</option>
+                                    <option value="3">3 курс</option>
+                                    <option value="4">4 курс</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-custom-primary w-100 mb-3">
+                            <i class="fas fa-user-plus me-2"></i>Зарегистрироваться
+                        </button>
+
+                        <div class="text-center">
+                            <p style="color: var(--text-muted);">
+                                Уже есть аккаунт? 
+                                <a href="{{ url_for('login') }}" style="color: var(--accent-gold); text-decoration: none;">
+                                    Войти
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+
+                    <div class="alert alert-custom mt-4" style="background: rgba(244, 162, 97, 0.1); border-left: 3px solid var(--accent-gold);">
+                        <i class="fas fa-info-circle me-2" style="color: var(--accent-gold);"></i>
+                        <small style="color: var(--text-muted);">
+                            После регистрации ваш аккаунт будет отправлен на модерацию администратору.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-custom-secondary">
+                        <i class="fas fa-home me-2"></i>На главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const roleSelect = document.getElementById('role');
+        const studentFields = document.getElementById('studentFields');
+        const groupSelect = document.getElementById('group_id');
+        const courseSelect = document.getElementById('course');
+
+        // Show/hide student fields based on role
+        roleSelect.addEventListener('change', function() {
+            if (this.value === 'student') {
+                studentFields.style.display = 'block';
+                groupSelect.required = true;
+                courseSelect.required = true;
+            } else {
+                studentFields.style.display = 'none';
+                groupSelect.required = false;
+                courseSelect.required = false;
+                groupSelect.value = '';
+                courseSelect.value = '';
+            }
+        });
+
+        // Check on page load if role is already selected
+        if (roleSelect.value === 'student') {
+            studentFields.style.display = 'block';
+            groupSelect.required = true;
+            courseSelect.required = true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Управление группами - Админ панель{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in-up">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-users-cog me-3" style="color: var(--accent-gold);"></i>
+                Управление группами
+            </h1>
+            <button class="btn btn-custom-primary" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+                <i class="fas fa-plus-circle me-2"></i>Добавить группу
+            </button>
+        </div>
+    </div>
+</div>
+
+{% if groups %}
+<div class="row g-4">
+    {% for group in groups %}
+    <div class="col-md-6 col-lg-4 animate-fade-in-up" style="animation-delay: {{ loop.index * 0.05 }}s;">
+        <div class="card-custom p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h4 class="mb-0">{{ group.name }}</h4>
+                <span class="badge badge-custom" style="background: var(--accent-gold); color: white;">
+                    ID: {{ group.id }}
+                </span>
+            </div>
+            
+            <p style="color: var(--text-muted);">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Курс: {{ group.course }}
+            </p>
+
+            <div class="d-flex gap-2 mt-3">
+                <a href="{{ url_for('edit_group', id=group.id) }}" class="btn btn-sm btn-custom-primary flex-grow-1">
+                    <i class="fas fa-edit me-1"></i>Редактировать
+                </a>
+                <form method="POST" action="{{ url_for('delete_group', id=group.id) }}" 
+                      onsubmit="return confirm('Вы уверены, что хотите удалить эту группу?');" class="d-inline">
+                    <button type="submit" class="btn btn-sm" 
+                            style="background: rgba(231, 111, 81, 0.2); color: var(--accent-orange); border: none;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card-custom p-5 text-center animate-fade-in-up">
+            <i class="fas fa-users-cog fa-4x mb-4" style="color: var(--text-muted);"></i>
+            <h3 class="mb-3">Пока нет групп</h3>
+            <p style="color: var(--text-muted);">Создайте первую группу для студентов</p>
+            <button class="btn btn-custom-primary mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+                <i class="fas fa-plus-circle me-2"></i>Создать группу
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="modal fade" id="addGroupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: var(--secondary-dark); border: 1px solid var(--border-color);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2" style="color: var(--accent-gold);"></i>
+                    Добавить группу
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1);"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_groups') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label-custom">
+                            <i class="fas fa-users-cog me-2"></i>Название группы
+                        </label>
+                        <input type="text" class="form-control form-control-custom" id="name" 
+                               name="name" required placeholder="Например: ФЭ-101">
+                    </div>
+                    <div class="mb-3">
+                        <label for="course" class="form-label-custom">
+                            <i class="fas fa-graduation-cap me-2"></i>Курс
+                        </label>
+                        <select class="form-control form-control-custom" id="course" name="course" required>
+                            <option value="">Выберите курс</option>
+                            <option value="1">1 курс</option>
+                            <option value="2">2 курс</option>
+                            <option value="3">3 курс</option>
+                            <option value="4">4 курс</option>
+                            <option value="5">5 курс</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border-color);">
+                    <button type="button" class="btn btn-custom-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-custom-primary">
+                        <i class="fas fa-save me-2"></i>Создать
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
